@@ -82,17 +82,18 @@ form.addEventListener('submit', async event => {
   }
 
   const payload = {
-    title: form.title.value,
-    firstName: form.firstName.value.trim(),
-    lastName: form.lastName.value.trim(),
-    email: form.email.value.trim(),
-    organization: form.organization.value.trim(),
-    country: form.country.value,
-    department: form.department.value.trim(),
-    industrySector: form.industrySector.value,
-    referrerName: form.referrerName.value.trim(),
-    referrerDepartment: form.referrerDepartment.value.trim(),
-    consent: form.consent.checked
+    Title: form.title.value,
+    FirstName: form.firstName.value.trim(),
+    LastName: form.lastName.value.trim(),
+    Email: form.email.value.trim(),
+    Company: form.organization.value.trim(),
+    Country: form.country.value,
+    Department: form.department.value.trim(),
+    IndustrySector: form.industrySector.value,
+    ReferrerName: form.referrerName.value.trim(),
+    ReferrerDepartment: form.referrerDepartment.value.trim(),
+    Agreement: form.consent.checked ? "Yes" : "No",
+    SubmissionTime: new Date().toLocaleString("sv-SE")
   };
 
   const originalHTML = submitButton.innerHTML;
