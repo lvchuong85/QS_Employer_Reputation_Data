@@ -100,15 +100,19 @@ form.addEventListener('submit', async event => {
   submitButton.textContent = 'SUBMITTING…';
 
   try {
-    // Replace this demo block with a real API request when the backend is ready.
-    // const response = await fetch('/api/qs-survey/register', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(payload)
-    // });
-    // if (!response.ok) throw new Error('Submission failed');
+    // Thay đường dẫn dưới đây bằng HTTP POST URL lấy từ Power Automate Trigger
+    const flowUrl = 'https://default4ef784396d6c4ea0ab1449b9284ab4.c9.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/04/workflows/207270644180420eab6e945d5e86ca8a/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=q4jknuXuwlWBl6ICOCGSBOncPdzNCGhDkXrblPsrPgI';
 
-    await new Promise(resolve => setTimeout(resolve, 650));
+    const response = await fetch(flowUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      throw new Error('Submission failed with status: ' + response.status);
+    }
+
     console.log('QS Employer Contact Registration payload:', payload);
     window.location.href = 'success.html';
   } catch (error) {
