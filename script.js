@@ -37,6 +37,7 @@ function setFieldError(id, message) {
   const input = document.getElementById(id);
   const wrapper = input?.closest('.field-control');
   const error = document.getElementById(`${id}Error`);
+
   if (!input || !error) return;
 
   wrapper?.classList.toggle('is-invalid', Boolean(message));
@@ -47,7 +48,9 @@ function setFieldError(id, message) {
 function validateField(id) {
   const input = document.getElementById(id);
   const message = fields[id](input.value);
+
   setFieldError(id, message);
+
   return !message;
 }
 
@@ -55,64 +58,103 @@ function validateConsent() {
   const consent = document.getElementById('consent');
   const body = consent.closest('.consent-body');
   const error = document.getElementById('consentError');
-  const message = consent.checked ? '' : 'Please provide consent before registering.';
+
+  const message = consent.checked
+    ? ''
+    : 'Please provide consent before registering.';
+
   body.classList.toggle('is-invalid', Boolean(message));
-  consent.setAttribute('aria-invalid', message ? 'true' : 'false');
+  consent.setAttribute(
+    'aria-invalid',
+    message ? 'true' : 'false'
+  );
+
   error.textContent = message;
+
   return !message;
 }
 
 Object.keys(fields).forEach(id => {
   const input = document.getElementById(id);
-  input.addEventListener(input.tagName === 'SELECT' ? 'change' : 'input', () => validateField(id));
+
+  input.addEventListener(
+    input.tagName === 'SELECT' ? 'change' : 'input',
+    () => validateField(id)
+  );
 });
 
-document.getElementById('consent').addEventListener('change', validateConsent);
+document
+  .getElementById('consent')
+  .addEventListener('change', validateConsent);
 
 form.addEventListener('submit', async event => {
   event.preventDefault();
 
-  const fieldsValid = Object.keys(fields).map(validateField).every(Boolean);
+  const fieldsValid = Object.keys(fields)
+    .map(validateField)
+    .every(Boolean);
+
   const consentValid = validateConsent();
 
   if (!fieldsValid || !consentValid) {
-    const firstInvalid = form.querySelector('[aria-invalid="true"]');
+    const firstInvalid = form.querySelector(
+      '[aria-invalid="true"]'
+    );
+
     firstInvalid?.focus?.();
+
     return;
   }
 
   const payload = {
-    title: form.title.value,
-    firstName: form.firstName.value.trim(),
-    lastName: form.lastName.value.trim(),
-    email: form.email.value.trim(),
-    organization: form.organization.value.trim(),
-    country: form.country.value,
-    department: form.department.value.trim(),
-    industrySector: form.industrySector.value,
-    referrerName: form.referrerName.value.trim(),
-    referrerDepartment: form.referrerDepartment.value.trim(),
-    consent: form.consent.checked
+    Title: form.title.value,
+    FirstName: form.firstName.value.trim(),
+    LastName: form.lastName.value.trim(),
+    Email: form.email.value.trim(),
+    Company: form.organization.value.trim(),
+    Country: form.country.value,
+    Department: form.department.value.trim(),
+    IndustrySector: form.industrySector.value,
+    ReferrerName: form.referrerName.value.trim(),
+    ReferrerDepartment: form.referrerDepartment.value.trim(),
+    Agreement: form.consent.checked ? "Yes" : "No",
+    SubmissionTime: new Date().toLocaleString("sv-SE")
   };
 
   const originalHTML = submitButton.innerHTML;
+
   submitButton.disabled = true;
   submitButton.textContent = 'SUBMITTING…';
 
   try {
-    // Replace this demo block with a real API request when the backend is ready.
-    // const response = await fetch('/api/qs-survey/register', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(payload)
-    // });
-    // if (!response.ok) throw new Error('Submission failed');
+    // Thay đường dẫn dưới đây bằng HTTP POST URL
+    // lấy từ Power Automate Trigger
+    const flowUrl = 'https://default4ef784396d6c4ea0ab1449b9284ab4.c9.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/04/workflows/207270644180420eab6e945d5e86ca8a/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=q4jknuXuwlWBl6ICOCGSBOncPdzNCGhDkXrblPsrPgI';
 
-    await new Promise(resolve => setTimeout(resolve, 650));
-    console.log('QS Employer Contact Registration payload:', payload);
+    const response = await fetch(flowUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        'Submission failed with status: ' + response.status
+      );
+    }
+
+    console.log(
+      'QS Employer Contact Registration payload:',
+      payload
+    );
+
     window.location.href = 'success.html';
+
   } catch (error) {
     console.error(error);
+
     submitButton.disabled = false;
     submitButton.innerHTML = originalHTML;
   }
