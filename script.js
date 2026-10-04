@@ -82,19 +82,19 @@ form.addEventListener('submit', async event => {
   }
 
   const payload = {
-  Title: document.getElementById('Title').value,
-  FirstName: document.getElementById('FirstName').value,
-  LastName: document.getElementById('LastName').value,
-  Email: document.getElementById('Email').value,
-  University: document.getElementById('Company').value,
-  Country: document.getElementById('Country').value,
-  Department: document.getElementById('Department').value,
-  AcademicSubject: document.getElementById('IndustrySector').value,
-  ReferrerName: document.getElementById('ReferrerName').value || "",
-  ReferrerDepartment: document.getElementById('ReferrerDepartment').value || "",
-  Agreement: document.getElementById('Agreement').checked ? "Yes" : "No",
-  SubmissionTime: new Date().toLocaleString("sv-SE")
-};
+    Title: form.title.value,
+    FirstName: form.firstName.value.trim(),
+    LastName: form.lastName.value.trim(),
+    Email: form.email.value.trim(),
+    Company: form.university.value.trim(),
+    Country: form.country.value,
+    Department: form.department.value.trim(),
+    IndustrySector: form.academicSubject.value,
+    ReferrerName: form.referrerName.value.trim(),
+    ReferrerDepartment: form.referrerDepartment.value.trim(),
+    Agreement: form.consent.checked ? "Yes" : "No",
+    SubmissionTime: new Date().toLocaleString("sv-SE") // YYYY-MM-DD HH:mm:ss
+  };
 
   const originalHTML = submitButton.innerHTML;
   submitButton.disabled = true;
