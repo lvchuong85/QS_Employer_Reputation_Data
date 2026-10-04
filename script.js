@@ -82,18 +82,19 @@ form.addEventListener('submit', async event => {
   }
 
   const payload = {
-    title: form.title.value,
-    firstName: form.firstName.value.trim(),
-    lastName: form.lastName.value.trim(),
-    email: form.email.value.trim(),
-    organization: form.organization.value.trim(),
-    country: form.country.value,
-    department: form.department.value.trim(),
-    industrySector: form.industrySector.value,
-    referrerName: form.referrerName.value.trim(),
-    referrerDepartment: form.referrerDepartment.value.trim(),
-    consent: form.consent.checked
-  };
+  Title: document.getElementById('Title').value,
+  FirstName: document.getElementById('FirstName').value,
+  LastName: document.getElementById('LastName').value,
+  Email: document.getElementById('Email').value,
+  University: document.getElementById('Company').value,
+  Country: document.getElementById('Country').value,
+  Department: document.getElementById('Department').value,
+  AcademicSubject: document.getElementById('IndustrySector').value,
+  ReferrerName: document.getElementById('ReferrerName').value || "",
+  ReferrerDepartment: document.getElementById('ReferrerDepartment').value || "",
+  Agreement: document.getElementById('Agreement').checked ? "Yes" : "No",
+  SubmissionTime: new Date().toLocaleString("sv-SE")
+};
 
   const originalHTML = submitButton.innerHTML;
   submitButton.disabled = true;
