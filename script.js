@@ -101,23 +101,20 @@ form.addEventListener('submit', async event => {
   submitButton.textContent = 'SUBMITTING…';
 
   try {
-    // Thay đường dẫn dưới đây bằng HTTP POST URL lấy từ Power Automate Trigger
-    const flowUrl = 'https://default4ef784396d6c4ea0ab1449b9284ab4.c9.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/04/workflows/207270644180420eab6e945d5e86ca8a/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=q4jknuXuwlWBl6ICOCGSBOncPdzNCGhDkXrblPsrPgI';
+    // Thay thế URL bên dưới bằng Web App URL thu được sau khi Deploy Google Apps Script
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbwJYbEZqgLNihJxQEUZzIsres8sd9VMCjMDI7FiRLaQhXD_8WfANaJS5x5Zr0ksp4QM/exec';
 
-    const response = await fetch(flowUrl, {
+    await fetch(scriptUrl, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      mode: 'no-cors', // Bắt buộc dùng no-cors để tránh bị chặn CORS từ GitHub Pages / External Web
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(payload)
     });
 
-    if (!response.ok) {
-      throw new Error('Submission failed with status: ' + response.status);
-    }
-
-    console.log('QS Employer Contact Registration payload:', payload);
+    console.log('QS Employer Contact Registration payload sent:', payload);
     window.location.href = 'success.html';
   } catch (error) {
-    console.error(error);
+    console.error('Submission error:', error);
     submitButton.disabled = false;
     submitButton.innerHTML = originalHTML;
   }
