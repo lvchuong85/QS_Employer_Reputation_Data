@@ -90,8 +90,8 @@ form.addEventListener('submit', async event => {
     Country: form.country.value,
     Department: form.department.value.trim(),
     IndustrySector: form.industrySector.value,
-    ReferrerName: form.referrerName.value.trim(),
-    ReferrerDepartment: form.referrerDepartment.value.trim(),
+    ReferrerName: form.referrerName ? form.referrerName.value.trim() : '',
+    ReferrerDepartment: form.referrerDepartment ? form.referrerDepartment.value.trim() : '',
     Agreement: form.consent.checked ? "Yes" : "No",
     SubmissionTime: new Date().toLocaleString("sv-SE")
   };
@@ -101,20 +101,23 @@ form.addEventListener('submit', async event => {
   submitButton.textContent = 'SUBMITTING…';
 
   try {
-    // Thay thế URL bên dưới bằng Web App URL thu được sau khi Deploy Google Apps Script
+    // Thay URL bằng Web App URL thu được sau khi triển khai Google Apps Script
     const scriptUrl = 'https://script.google.com/macros/s/AKfycbwJYbEZqgLNihJxQEUZzIsres8sd9VMCjMDI7FiRLaQhXD_8WfANaJS5x5Zr0ksp4QM/exec';
 
     await fetch(scriptUrl, {
       method: 'POST',
-      mode: 'no-cors', // Bắt buộc dùng no-cors để tránh bị chặn CORS từ GitHub Pages / External Web
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8'
+      },
       body: JSON.stringify(payload)
     });
 
-    console.log('QS Employer Contact Registration payload sent:', payload);
+    console.log('Submitted successfully:', payload);
     window.location.href = 'success.html';
   } catch (error) {
-    console.error('Submission error:', error);
+    console.error('Submission failed:', error);
+    alert('An error occurred during submission. Please try again.');
     submitButton.disabled = false;
     submitButton.innerHTML = originalHTML;
   }
